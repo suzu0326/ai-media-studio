@@ -1,12 +1,12 @@
 from flask import Flask, request, render_template_string, jsonify
 import replicate
 import time
-
+import os
 app = Flask(__name__)
 
 # YOUR REPLICATE API KEY
-REPLICATE_API_KEY = "r8_4X9ZRVMyMt97AWvkdsudQqD6OAq01Vr0mhEsn"
 
+REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")
 HTML = """
 <!DOCTYPE html>
 <html>
