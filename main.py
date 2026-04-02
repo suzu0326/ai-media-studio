@@ -2,11 +2,13 @@ from flask import Flask, request, render_template_string, jsonify
 import replicate
 import time
 import os
+
 app = Flask(__name__)
 
-# YOUR REPLICATE API KEY
-
+# Read API key from environment variable (set on Render)
 REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")
+
+# HTML template (shortened for brevity – you can keep your full HTML)
 HTML = """
 <!DOCTYPE html>
 <html>
@@ -21,19 +23,9 @@ HTML = """
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
+        .container { max-width: 700px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
         .card {
             background: white;
             border-radius: 24px;
@@ -41,10 +33,7 @@ HTML = """
             margin-bottom: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-        .card h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
+        .card h2 { color: #667eea; margin-bottom: 20px; }
         textarea {
             width: 100%;
             padding: 12px;
@@ -66,23 +55,10 @@ HTML = """
             cursor: pointer;
             margin-top: 15px;
         }
-        button:hover {
-            background: #5a67d8;
-        }
-        .result {
-            margin-top: 20px;
-            text-align: center;
-            min-height: 200px;
-        }
-        .result img {
-            max-width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .loading {
-            text-align: center;
-            padding: 30px;
-        }
+        button:hover { background: #5a67d8; }
+        .result { margin-top: 20px; text-align: center; min-height: 200px; }
+        .result img { max-width: 100%; border-radius: 12px; }
+        .loading { text-align: center; padding: 30px; }
         .loader {
             display: inline-block;
             width: 40px;
@@ -96,34 +72,15 @@ HTML = """
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .error {
-            background: #ffe0e0;
-            color: #c33;
-            padding: 12px;
-            border-radius: 12px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: white;
-            font-size: 12px;
-        }
-        .sample-images {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+        .error { background: #ffe0e0; color: #c33; padding: 12px; border-radius: 12px; }
+        .footer { text-align: center; margin-top: 20px; color: white; font-size: 12px; }
+        .sample-images { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .sample-btn {
             background: #f0f0f0;
             padding: 8px 12px;
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
-            display: inline-block;
-        }
-        .sample-btn:hover {
-            background: #e0e0e0;
         }
     </style>
 </head>
@@ -133,52 +90,34 @@ HTML = """
             <h1>🎨 AI Media Studio</h1>
             <p>Generate stunning images with AI — Powered by Flux</p>
         </div>
-        
         <div class="card">
             <h2>🖼️ Image Generator</h2>
             <textarea id="prompt" rows="3" placeholder="Describe what you want to create..."></textarea>
-            
             <div class="sample-images">
                 <span class="sample-btn" onclick="setPrompt('A beautiful sunset over mountains')">🌅 Sunset</span>
                 <span class="sample-btn" onclick="setPrompt('A cute cat wearing a wizard hat')">🐱 Wizard Cat</span>
                 <span class="sample-btn" onclick="setPrompt('A futuristic city with neon lights')">🌆 Futuristic City</span>
                 <span class="sample-btn" onclick="setPrompt('A serene lake with mountain reflection')">🏔️ Serene Lake</span>
             </div>
-            
             <button onclick="generate()">✨ Generate Image</button>
             <div id="result" class="result"></div>
         </div>
-        
-        <div class="footer">
-            Powered by Replicate • Flux Schnell
-        </div>
+        <div class="footer">Powered by Replicate • Flux Schnell</div>
     </div>
-    
     <script>
-        function setPrompt(text) {
-            document.getElementById('prompt').value = text;
-        }
-        
+        function setPrompt(text) { document.getElementById('prompt').value = text; }
         async function generate() {
             const prompt = document.getElementById('prompt').value;
             const resultDiv = document.getElementById('result');
-            
-            if (!prompt) {
-                alert('Please enter a prompt');
-                return;
-            }
-            
+            if (!prompt) { alert('Please enter a prompt'); return; }
             resultDiv.innerHTML = '<div class="loading"><div class="loader"></div><p>Creating your image...</p></div>';
-            
             try {
                 const response = await fetch('/generate', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({prompt: prompt})
                 });
-                
                 const data = await response.json();
-                
                 if (data.success) {
                     resultDiv.innerHTML = `<img src="${data.image_url}" alt="Generated Image">`;
                 } else {
@@ -200,10 +139,8 @@ def home():
 @app.route('/generate', methods=['POST'])
 def generate():
     prompt = request.json.get('prompt')
-    
     if not prompt:
         return jsonify({'success': False, 'error': 'No prompt'})
-    
     try:
         client = replicate.Client(api_token=REPLICATE_API_KEY)
         output = client.run(
@@ -220,6 +157,5 @@ def generate():
         return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
-    import os
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
