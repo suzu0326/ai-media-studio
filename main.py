@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Read API key from environment variable (set on Render)
-REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")
+REPLICATE_API_KEY = "r8_4X9ZRVMyMt97AWvkdsudQqD6OAq01Vr0mhEsn"
 
 # HTML template (shortened for brevity – you can keep your full HTML)
 HTML = """
