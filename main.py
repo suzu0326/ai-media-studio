@@ -6,9 +6,9 @@ import time
 app = Flask(__name__)
 
 # Read API key from environment (or use hardcoded for testing)
-REPLICATE_API_TOKEN = os.environ.get("REPLICATE_API_TOKEN")
+REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")
 
-client = replicate.Client(api_token=REPLICATE_API_TOKEN)
+client = replicate.Client(api_token=REPLICATE_API_KEY)
 
 # Full HTML template (complete)
 HTML = """
