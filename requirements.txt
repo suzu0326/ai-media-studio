@@ -1,4 +1,4 @@
-Flask
-replicate
-requests
-gunicorn
+Flask==2.3.3
+replicate==0.24.0
+requests==2.31.0
+gunicorn==21.2.0
