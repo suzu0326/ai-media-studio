@@ -146,10 +146,22 @@ def generate():
                 "aspect_ratio": "1:1"
             }
         )
-        # output is a list of FileOutput objects, but indexing gives URL string
-        image_url = output[0].url
+        # Debug: print output type and content to logs
+        print(f"Output type: {type(output)}")
+        print(f"Output content: {output}")
+        
+        # Extract URL correctly
+        if isinstance(output, list) and len(output) > 0:
+            if hasattr(output[0], 'url'):
+                image_url = output[0].url
+            else:
+                image_url = str(output[0])
+        else:
+            image_url = str(output)
+        
         return jsonify({'success': True, 'image_url': image_url})
     except Exception as e:
+        print(f"Error: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
