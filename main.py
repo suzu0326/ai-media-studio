@@ -132,17 +132,12 @@ HTML = """
 </html>
 """
 
-@app.route('/')
-def home():
-    return render_template_string(HTML)
-
 @app.route('/generate', methods=['POST'])
 def generate():
     prompt = request.json.get('prompt')
     if not prompt:
         return jsonify({'success': False, 'error': 'No prompt'})
     try:
-        client = replicate.Client(api_token=REPLICATE_API_TOKEN)
         output = client.run(
             "black-forest-labs/flux-schnell",
             input={
@@ -151,6 +146,7 @@ def generate():
                 "aspect_ratio": "1:1"
             }
         )
+        # output is a list of FileOutput objects, but indexing gives URL string
         image_url = output[0]
         return jsonify({'success': True, 'image_url': image_url})
     except Exception as e:
