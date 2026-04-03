@@ -1,16 +1,14 @@
 from flask import Flask, request, render_template_string, jsonify
-import os
 import replicate
 import time
+import os
 
 app = Flask(__name__)
 
-# Read API key from environment (or use hardcoded for testing)
+# Read API key from environment variable (set on Render)
 REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")
 
-client = replicate.Client(api_token=REPLICATE_API_KEY)
-
-# Full HTML template (complete)
+# Full HTML template
 HTML = """
 <!DOCTYPE html>
 <html>
@@ -134,12 +132,17 @@ HTML = """
 </html>
 """
 
+@app.route('/')
+def home():
+    return render_template_string(HTML)
+
 @app.route('/generate', methods=['POST'])
 def generate():
     prompt = request.json.get('prompt')
     if not prompt:
         return jsonify({'success': False, 'error': 'No prompt'})
     try:
+        client = replicate.Client(api_token=REPLICATE_API_KEY)
         output = client.run(
             "black-forest-labs/flux-schnell",
             input={
@@ -148,22 +151,9 @@ def generate():
                 "aspect_ratio": "1:1"
             }
         )
-        # Debug: print output type and content to logs
-        print(f"Output type: {type(output)}")
-        print(f"Output content: {output}")
-        
-        # Extract URL correctly
-        if isinstance(output, list) and len(output) > 0:
-            if hasattr(output[0], 'url'):
-                image_url = output[0].url
-            else:
-                image_url = str(output[0])
-        else:
-            image_url = str(output)
-        
+        image_url = output[0]
         return jsonify({'success': True, 'image_url': image_url})
     except Exception as e:
-        print(f"Error: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
