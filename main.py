@@ -147,7 +147,7 @@ def generate():
             }
         )
         # output is a list of FileOutput objects, but indexing gives URL string
-        image_url = output[0]_url
+        image_url = output[0].url
         return jsonify({'success': True, 'image_url': image_url})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
