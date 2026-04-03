@@ -6,7 +6,7 @@ import os
 app = Flask(__name__)
 
 # Read API key from environment (or use hardcoded for testing)
-REPLICATE_API_KEY = os.environ.get("REPLICATE_API_TOKEN")
+REPLICATE_API_TOKEN = os.environ.get("REPLICATE_API_TOKEN")
 
 # Full HTML template (complete)
 HTML = """
