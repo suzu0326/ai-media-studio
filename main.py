@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template_string, jsonify
 import replicate
 import time
-import os
 
 app = Flask(__name__)
 
