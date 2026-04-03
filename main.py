@@ -1,11 +1,11 @@
 from flask import Flask, request, render_template_string, jsonify
 import replicate
 import time
+Import os
 
 app = Flask(__name__)
 
 # Read API key from environment variable (set on Render)
-REPLICATE_API_KEY = "import os
 REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")"
 
 # HTML template (shortened for brevity – you can keep your full HTML)
