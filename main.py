@@ -132,10 +132,6 @@ HTML = """
 </html>
 """
 
-@app.route('/')
-def home():
-    return render_template_string(HTML)
-
 @app.route('/generate', methods=['POST'])
 def generate():
     prompt = request.json.get('prompt')
@@ -151,7 +147,8 @@ def generate():
                 "aspect_ratio": "1:1"
             }
         )
-        image_url = output[0]
+        # Extract the URL from the FileOutput object
+        image_url = output[0].url
         return jsonify({'success': True, 'image_url': image_url})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
