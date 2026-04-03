@@ -5,7 +5,8 @@ import time
 app = Flask(__name__)
 
 # Read API key from environment variable (set on Render)
-REPLICATE_API_KEY = "r8_6MDaeO2SYqwYXOtEZucj1WFZxdhOE5M1Kd30l"
+REPLICATE_API_KEY = "import os
+REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")"
 
 # HTML template (shortened for brevity – you can keep your full HTML)
 HTML = """
