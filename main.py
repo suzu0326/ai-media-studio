@@ -5,10 +5,10 @@ import os
 
 app = Flask(__name__)
 
-# Read API key from environment variable (set on Render)
-REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY")
+# Read API key from environment (or use hardcoded for testing)
+REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY", "r8_4X9ZRVMvMt97AlwVkdSudQqD6OAq01Vr0mhEsm")
 
-# Full HTML template (properly closed)
+# Full HTML template (complete)
 HTML = """
 <!DOCTYPE html>
 <html>
@@ -23,19 +23,9 @@ HTML = """
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
+        .container { max-width: 700px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
         .card {
             background: white;
             border-radius: 24px;
@@ -43,10 +33,7 @@ HTML = """
             margin-bottom: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
-        .card h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
+        .card h2 { color: #667eea; margin-bottom: 20px; }
         textarea {
             width: 100%;
             padding: 12px;
@@ -68,22 +55,10 @@ HTML = """
             cursor: pointer;
             margin-top: 15px;
         }
-        button:hover {
-            background: #5a67d8;
-        }
-        .result {
-            margin-top: 20px;
-            text-align: center;
-            min-height: 200px;
-        }
-        .result img {
-            max-width: 100%;
-            border-radius: 12px;
-        }
-        .loading {
-            text-align: center;
-            padding: 30px;
-        }
+        button:hover { background: #5a67d8; }
+        .result { margin-top: 20px; text-align: center; min-height: 200px; }
+        .result img { max-width: 100%; border-radius: 12px; }
+        .loading { text-align: center; padding: 30px; }
         .loader {
             display: inline-block;
             width: 40px;
@@ -97,33 +72,15 @@ HTML = """
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .error {
-            background: #ffe0e0;
-            color: #c33;
-            padding: 12px;
-            border-radius: 12px;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: white;
-            font-size: 12px;
-        }
-        .sample-images {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
+        .error { background: #ffe0e0; color: #c33; padding: 12px; border-radius: 12px; }
+        .footer { text-align: center; margin-top: 20px; color: white; font-size: 12px; }
+        .sample-images { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
         .sample-btn {
             background: #f0f0f0;
             padding: 8px 12px;
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
-        }
-        .sample-btn:hover {
-            background: #e0e0e0;
         }
     </style>
 </head>
@@ -148,16 +105,11 @@ HTML = """
         <div class="footer">Powered by Replicate • Flux Schnell</div>
     </div>
     <script>
-        function setPrompt(text) {
-            document.getElementById('prompt').value = text;
-        }
+        function setPrompt(text) { document.getElementById('prompt').value = text; }
         async function generate() {
             const prompt = document.getElementById('prompt').value;
             const resultDiv = document.getElementById('result');
-            if (!prompt) {
-                alert('Please enter a prompt');
-                return;
-            }
+            if (!prompt) { alert('Please enter a prompt'); return; }
             resultDiv.innerHTML = '<div class="loading"><div class="loader"></div><p>Creating your image...</p></div>';
             try {
                 const response = await fetch('/generate', {
