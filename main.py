@@ -142,7 +142,7 @@ def generate():
     if not prompt:
         return jsonify({'success': False, 'error': 'No prompt'})
     try:
-        client = replicate.Client(api_token=REPLICATE_API_KEY)
+        client = replicate.Client(api_token=REPLICATE_API_TOKEN)
         output = client.run(
             "black-forest-labs/flux-schnell",
             input={
